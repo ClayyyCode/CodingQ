@@ -89,7 +89,7 @@ input_1: input where {any (x[0]-x[1]) in 0}each input
 o: (min/) input_1 
 b: (max/) input_1
 path: (b;b) # 0
-{.[path;(523 + til(790-523);427);+;1]}
+//{.[path;(523 + til(790-523);427);+;1]}
 {.[path;(((min x[;1])+$[count g:til abs (-). x[;1];g;0]);(min x[;0])+$[count p:til abs (-). x[;0];p;0]);+;1]}first input_1
 
 //Day 6
@@ -116,21 +116,63 @@ min sum each {sum 1+til x} each 'abs input -/: input  //brute force
 
 
 //Day 9 
-input: "J"$'' read0 `:inputD9.txt
-u: 1 rotate input // move up
-d: -1 rotate input //move down
-l: 1 rotate' input // shift left
-r: -1 rotate' input // shift right
-a: input < u // smaller than down one row?
-b: input < d // smaller than up one row?
-c: input < l // smaller than right one col?
-d: input < r // smaller than left one col?
-a[99]|:1b
-b[0]|:1b
-c[;99]|:1b
-d[;0]|:1b
-sum ((raze/) input+1) * (raze/) (&/) (a;b;c;d)
-sum (*) . ((raze/)') (input+1; (&/) (a;b;c;d)) //part 1
+
+// NextRowGreaterthanOriginal
+nrg: {x < 1 rotate x} // think of each index -1 vertically 
+// LastRowGreaterthanOriginal
+lrg: {x < -1 rotate x} // think of each index +1 vertically
+// NextColGreaterthanOriginal
+ncg: {x < 1 rotate' x} // think of each index -1 horizontally 
+// LastColGreaterthanOriginal
+lcg: {x < -1 rotate' x} // think of each index +1 horizontally 
+
+ex_input: (2 1 9 9 9 4 3 2 1 0; 3 9 8 7 8 9 4 9 2 1; 9 8 5 6 7 8 9 8 9 2; 8 7 6 7 8 9 6 7 8 9;9 8 9 9 9 6 5 6 7 8)
+
+d9p1:{
+  x: "J"$'' read0 x;
+  x: flip 10,/:(flip 10,/:x,\:10),\:10; // create boundries for input
+  am: (&/) (nrg;lrg;ncg;lcg) @\: x; // Area Map for low point
+  sum (*) . ((raze/)') (x+1; am)
+  }
+
+d9p1[`:inputD9.txt]
+
+d9p2:{
+  x: "J"$'' read0 x;
+  tb: flip 10,/:(flip 10,/:x,\:10),\:10;
+  am: (&/) (nrg;lrg;ncg;lcg) @\: tb;
+  am_lb: am * (count first am) cut sums raze am; 
+  f:{
+    tb: x[1];
+    x: x[0];
+    a: (1 rotate x) * (tb < 9) & tb > 1 rotate tb;
+    b: (-1 rotate x) * (tb < 9) & tb > -1 rotate tb;
+    c: (1 rotate' x) * (tb < 9) & tb > 1 rotate' tb;
+    d: (-1 rotate' x) * (tb < 9) & tb > -1 rotate' tb;
+    ((|/) (x;a;b;c;d); tb)
+  };
+  basin: first (f/) (am_lb;tb);
+  :prd 3#1_desc value count each group (raze/) basin
+ }
+
+d9p2[`:inputD9.txt]
+
+elev: (enlist 12#10), ((10,/: ex_input),\:10),enlist 12#10
+x: elev
+i: (&/) (a;b;c;d)
+basin: i*12 cut sums raze i
+
+a: (-1 rotate' basin) *  (elev < 9) & elev > -1 rotate' elev 
+b: (1 rotate' basin) *  (elev < 9) & elev > 1 rotate' elev 
+c: (1 rotate basin) *  (elev < 9) & elev > 1 rotate elev 
+d: (-1 rotate basin) *  (elev < 9) & elev > -1 rotate elev 
+basin: (|/) (a;b;c;d; basin)
+prd 3#1_desc value count each group (raze/) basin
+
+
+
+
+
 
 
 .aoc2021.d9.t2: {

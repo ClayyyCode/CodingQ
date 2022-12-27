@@ -14,12 +14,11 @@ ans: sum f each input
 
 // Part 2
 
-x: first input
 f2: {
   a: x . 0 0;
   b: x . 0 1;
   c: x . 1 0;
   d: x . 1 1;
-  ((b >= c) and (a <= d)) or ((d >= a) and (c <= b))
+  ((b >= c) and (a <= d))
  }
 ans: sum f2 each input

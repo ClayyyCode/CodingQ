@@ -26,3 +26,10 @@ verti_pos: asc each {x[0] union' x[1]} {x[0] inter'/: x[1 2]} {where each not nu
 verti_word: vw where not "" ~/: vw: (flip original) ./: {first[x], enlist 1_x} each raze (til count verti_pos),'' {(where 1 < deltas x)  _ x} each verti_pos  // the deltas with _ is to separate mutiple words on the same line
 
 ans: sum {sum[x]*count[x]} each score horiz_word, verti_word // 500135
+
+// Refactor for short and gross to read
+
+sol: {p: (asc') (union') . {x[0] inter'/: 1_x} ({(where') not null x}') (x;y;z);
+ w where not "" ~/: w: x ./: ({x[0], enlist 1_x}') raze (til count p),'' ({(where 1 < (-':) x) _ x}') p};
+
+ans: sum ({sum[x]*count x}') raze score sol ./: ((original;left;right);(flip') (original;up;down));

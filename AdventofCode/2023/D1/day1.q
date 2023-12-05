@@ -14,12 +14,6 @@ fn3: {letters: ![;m] distinct raze @[dd;] m:1+where count each value  dd:(1+til 
  };
 show sum fn3 each data;
 
-letters: ![;m] @[dd;] m:1+where count each value  dd:(1+til 9)!ss/:[;key digitMap] "eightwo23three2"
-numLoc: where not null numVal:"J"$/:"eightwo23three2"
-
-
-
-
 show fn fn2 each data;
 
 {ssr/[x;key digitMap;value digitMap]} each
